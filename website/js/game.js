@@ -19,3 +19,4 @@ function selectAnswer(button) {
 
   console.log("User selected:", selectedAnswer);
 }
+
