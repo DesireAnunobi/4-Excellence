@@ -4,24 +4,14 @@ A comprehensive REST API for managing educational games, users, classes, and stu
 
 ---
 
-## 📚 Table of Contents
+## Table of Contents
 
 - [User Management](#-user-management)
 - [Game Management](#-game-management)
-- [Installation](#-installation)
-- [Base URL](#-base-url)
 
----
 
-## 🔗 Base URL
 
-```
-http://localhost:3007
-```
-
----
-
-## 👥 User Management
+## User Management
 
 ### Get Student Statistics
 **`GET /user/student/:id/stats`**

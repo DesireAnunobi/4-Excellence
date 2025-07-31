@@ -1,6 +1,4 @@
---
--- PostgreSQL database schema creation
---
+
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -12,9 +10,7 @@ SET client_min_messages = warning;
 SET default_tablespace = '';
 SET default_with_oids = false;
 
----
---- Drop tables in reverse dependency order
----
+
 
 DROP TABLE IF EXISTS Student_Stats CASCADE;
 DROP TABLE IF EXISTS Students_To_Classes CASCADE;
@@ -28,11 +24,7 @@ DROP TABLE IF EXISTS Teachers CASCADE;
 DROP TABLE IF EXISTS Users CASCADE;
 DROP TABLE IF EXISTS Subjects CASCADE;
 
---
--- Create tables in proper dependency order
---
-
--- Base tables with no dependencies
+s
 CREATE TABLE Users(
   user_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   username VARCHAR(50) NOT NULL,
@@ -138,9 +130,9 @@ CREATE TABLE Student_Stats(
       ON DELETE CASCADE
 );
 
---
--- Insert sample data
---
+
+-- sample data
+
 
 INSERT INTO subjects (subject) 
 VALUES 
