@@ -8,23 +8,23 @@ class Game {
         this.subject_id = data.subject_id;
     }
 
-    static async getVeryRandomQuestions() {
-        try {
-            const questions = await db.query(`SELECT * FROM Quiz_Questions ORDER BY RANDOM() LIMIT 10`);
-            return questions.rows.map(row => ({
-                id: row.question_id,
-                question: row.question,
-                answer: row.answer,
-                options: row.options,
-                difficulty: row.difficulty,
-                topic: row.topic
-            }));
-        } catch (error) {
-            console.error("Error fetching questions:", error);
-            throw error; 
-        }
+    // static async getVeryRandomQuestions() {
+    //     try {
+    //         const questions = await db.query(`SELECT * FROM Quiz_Questions ORDER BY RANDOM() LIMIT 10`);
+    //         return questions.rows.map(row => ({
+    //             id: row.question_id,
+    //             question: row.question,
+    //             answer: row.answer,
+    //             options: row.options,
+    //             difficulty: row.difficulty,
+    //             topic: row.topic
+    //         }));
+    //     } catch (error) {
+    //         console.error("Error fetching questions:", error);
+    //         throw error; 
+    //     }
         
-    }
+    // }
 
     static async getRandomQuestions(questionType, subjectName) {
         try {
@@ -96,19 +96,19 @@ class Game {
                 `SELECT student_id FROM Students WHERE user_id = $1`,
                 [userID]
             );
+          
+            if (!studentCheck.rows.length) {
+                throw new Error(`Student with ID ${userID} not found`);
+            }
 
             const studentId = studentCheck.rows[0].student_id;
-            
-            if (studentCheck.rows.length === 0) {
-                throw new Error(`Student with ID ${studentId} not found`);
-            }
     
             const gameCheck = await db.query(
                 `SELECT game_id FROM Games WHERE game_id = $1`,
                 [gameId]
             );
             
-            if (gameCheck.rows.length === 0) {
+            if (!gameCheck.rows.length) {
                 throw new Error(`Game with ID ${gameId} not found`);
             }
                
