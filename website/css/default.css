@@ -14,7 +14,7 @@ body {
 nav {
   background-color: rgb(135, 236, 135);
   color: rgba(0, 0, 0, 0.69);
-  padding: 1rem;
+  padding: auto;
   font-size: larger;
   display: flex;
   justify-content: space-between;
@@ -25,7 +25,7 @@ nav {
 footer {
   background-color: rgb(135, 236, 135);
   color: rgba(0, 0, 0, 0.69);
-  padding: 1rem;
+  padding: auto;
   font-size: larger;
   text-align: center;
 }
