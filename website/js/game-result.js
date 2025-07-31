@@ -1,8 +1,19 @@
 //results table after quiz
 
-const results = [
-  false, false, true //need real mark per q
-];
+const answers = sessionStorage.getItem("answers");
+const results = JSON.parse(answers);
+sessionStorage.removeItem("answers");
+
+document.getElementById('homebtn').addEventListener('click', async () => {
+  window.location.assign("students.html");
+});
+
+document.getElementById('logoutbtn').addEventListener('click', () => {
+  localStorage.removeItem('userID');
+  localStorage.removeItem('username');
+  localStorage.removeItem('token');
+  window.location.assign('login.html');
+});
 
 window.addEventListener("DOMContentLoaded", () => {
   const tableBody = document.getElementById("resultsTable");

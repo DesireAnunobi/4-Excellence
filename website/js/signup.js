@@ -1,6 +1,5 @@
-const API_URL = 'http://localhost:3000'
-
 document.getElementById("signup").addEventListener("click", async () => {
+    const API_URL = 'http://localhost:3000';
     const is_teacher = false;
 
     const username = document.getElementById("userid").value;
@@ -13,13 +12,14 @@ document.getElementById("signup").addEventListener("click", async () => {
     }
 
     if (username.length > 0 && password.length > 0) {
-        console.log(data);
         let url = API_URL + '/user/signup';
 
         const response = await sendPostRequest(url, data);
-        //const result = await response.json();
+        const result = await response.json();
 
         if (response.status == 200) {
+            localStorage.setItem("userID", result.userID);
+            localStorage.setItem("username", result.username);
             localStorage.setItem("token", result.token);
             window.location.assign("students.html");
         
@@ -42,7 +42,6 @@ async function sendPostRequest(url, data) {
     }
 
     const resp = await fetch(url, options);
-    const respBody = await resp.json();
 
-    return respBody;
+    return resp;
 };

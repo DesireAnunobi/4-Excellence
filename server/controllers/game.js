@@ -23,19 +23,32 @@ async function getVeryRandomQuestions(req,res) {
 
 async function endGame(req, res) {
     try {
-        const gameID  = req.params.gameID;
+        const gameId = req.params.gameId;
         const { studentId, finalScore, questionsAnswered, correctAnswers } = req.body;
         
-        const result = await Game.endGame(gameID, studentId, finalScore, questionsAnswered, correctAnswers);
+        const result = await Game.endGame(gameId, studentId, finalScore, questionsAnswered, correctAnswers);
         res.json(result);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 }
 
+async function startGame(req, res) {
+    try {
+        const gameId  = req.params.gameId;
+        const { studentId } = req.body; 
+        const result = await Game.startGame(gameId , studentId);
+        res.json(result);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
+
+
 module.exports = {
     getRandomQuestions,
     getVeryRandomQuestions,
-    endGame
+    endGame,
+    startGame
 
 }

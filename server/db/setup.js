@@ -15,7 +15,7 @@ async function setUpAll(baseDir = __dirname) {
         .catch(error => console.log(error));
 
     for (let i in quizzes) {
-        let filepath = path.join(baseDir, '..', '..', 'server', 'db', 'questions', quizzes[i]);
+        let filepath = path.join(baseDir, 'questions', quizzes[i]);
 
         await db.query(questions(filepath))
             .then(data => {
@@ -26,5 +26,9 @@ async function setUpAll(baseDir = __dirname) {
 
     db.end();
 };
+
+if (require.main === module) {
+    setUpAll();
+}
 
 module.exports = setUpAll;

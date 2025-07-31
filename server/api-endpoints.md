@@ -1,139 +1,556 @@
-API Endpoints
-GET Student Stats
-userRouter.get('/student/:id/stats', userController.getUserStats); 
+# 4-Excellence Back-End API Documentation
 
-Example Json
-Requires - Requires UserID
+A comprehensive REST API for managing educational games, users, classes, and student statistics.
 
-Example HTTP Request: GET localhost:3007/user/student/1/stats Body: { }
+---
 
-Expected Response: `[ { "student_id": 1, "game_id": 5, "times_played": 7, "avg_score": 92, "best_score": 98, "last_score": 95 },
+## 📚 Table of Contents
 
-{
+- [User Management](#-user-management)
+- [Game Management](#-game-management)
+- [Installation](#-installation)
+- [Base URL](#-base-url)
+
+---
+
+## 🔗 Base URL
+
+```
+http://localhost:3007
+```
+
+---
+
+## 👥 User Management
+
+### Get Student Statistics
+**`GET /user/student/:id/stats`**
+
+Retrieves all game statistics for a specific student.
+
+**Parameters:**
+- `id` (path) - Student ID
+
+**Example Request:**
+```http
+GET /user/student/1/stats
+```
+
+**Response:**
+```json
+[
+  {
+    "student_id": 1,
+    "game_id": 5,
+    "times_played": 7,
+    "avg_score": 92,
+    "best_score": 98,
+    "last_score": 95
+  },
+  {
     "student_id": 1,
     "game_id": 4,
     "times_played": 3,
     "avg_score": 78,
     "best_score": 88,
     "last_score": 82
-},
-
-{
+  },
+  {
     "student_id": 1,
     "game_id": 1,
     "times_played": 5,
     "avg_score": 85,
     "best_score": 95,
     "last_score": 90
+  }
+]
+```
+
+---
+
+### Get User Information
+**`GET /user/:id`**
+
+Retrieves basic user information.
+
+**Parameters:**
+- `id` (path) - User ID
+
+**Example Request:**
+```http
+GET /user/1
+```
+
+**Response:**
+```json
+[
+  {
+    "username": "sarah_johnson",
+    "is_teacher": true
+  }
+]
+```
+
+---
+
+### Get Classes by Teacher
+**`GET /user/:teacherid/:id/classes`**
+
+Retrieves all classes for a specific teacher.
+
+**Parameters:**
+- `teacherid` (path) - Teacher ID
+- `id` (path) - Additional ID parameter
+
+**Example Request:**
+```http
+GET /user/2/4/classes
+```
+
+**Response:**
+```json
+[
+  {
+    "class_name": "Algebra I"
+  },
+  {
+    "class_name": "Biology Basics"
+  },
+  {
+    "class_name": "Creative Writing"
+  },
+  {
+    "class_name": "European History"
+  },
+  {
+    "class_name": "Geometry"
+  },
+  {
+    "class_name": "Physical Science"
+  }
+]
+```
+
+---
+
+### Get Students in Class
+**`GET /user/students/classes/:id`**
+
+Retrieves all students enrolled in a specific class.
+
+**Parameters:**
+- `id` (path) - Class ID
+
+**Example Request:**
+```http
+GET /user/students/classes/4
+```
+
+**Response:**
+```json
+{
+  "class_name": "Algebra I",
+  "students_names": [
+    "alice_cooper"
+  ]
 }
-] `
+```
 
-userRouter.get('/:id', userController.getUserInfo); 
+---
 
-Example Json
-Requires - Requires UserID
+### Get All Classes for Teacher
+**`GET /user/:teacherid/allclasses`**
 
-Example HTTP Request: GET localhost:3007/user/1 Body: { }
+Retrieves all classes managed by a teacher.
 
-Expected Response: [ { "username": "sarah_johnson", "is_teacher": true } ]
+**Parameters:**
+- `teacherid` (path) - Teacher ID
 
-userRouter.get('/:teacherid/:id/classes', userController.getClassByTeacher);
+**Example Request:**
+```http
+GET /user/3/allclasses
+```
 
-Example Json
-Requires - Requires TeacherID
+**Response:**
+```json
+[
+  {
+    "class_name": "Algebra I"
+  },
+  {
+    "class_name": "Biology Basics"
+  },
+  {
+    "class_name": "Creative Writing"
+  },
+  {
+    "class_name": "European History"
+  },
+  {
+    "class_name": "Geometry"
+  },
+  {
+    "class_name": "Physical Science"
+  }
+]
+```
 
-Example HTTP Request: GET localhost:3007/user/2/4/classes Body: { }
+---
 
-Expected Response: [ { "class_name": "Algebra I" }, { "class_name": "Biology Basics" }, { "class_name": "Creative Writing" }, { "class_name": "European History" }, { "class_name": "Geometry" }, { "class_name": "Physical Science" } ]
+### User Signup
+**`POST /user/signup`**
 
-userRouter.get('/students/classes/:id', userController.getStudentsInClass);
+Creates a new user account.
 
-Example Json
-Requires - classID
+**Example Request:**
+```http
+POST /user/signup
+Content-Type: application/json
 
-Example HTTP Request: GET ocalhost:3007/user/students/classes/4 Body: { }
+{
+  "username": "hello",
+  "password": "password"
+}
+```
 
-Expected Response: { "class_name": "Algebra I", "students_names": [ "alice_cooper" ] }
+**Response:**
+```json
+{
+  "user_id": 18,
+  "username": "hello",
+  "password_hash": "$2b$10$AMf4.C.r7i/42A.TrXWWB.5Ro1vBQD5hwsJtTltftWEdsgI.gnt5C",
+  "is_teacher": false,
+  "student_id": 13,
+  "role": "student"
+}
+```
 
-userRouter.get('/:id/classes', userController.getClasses):
+---
 
-Example Json
-Requires - TeacherID and classID
+### User Login
+**`POST /user/login`**
 
-Example HTTP Request: GET localhost:3007/user/3/4/classes Body: { }
+Authenticates user credentials.
 
-Expected Response: { "classes": [ { "class_name": "Algebra I" } ] }
+**Example Request:**
+```http
+POST /user/login
+Content-Type: application/json
 
-userRouter.get('/:teacherid/allclasses', userController.getAllClasses);
+{
+  "username": "hello",
+  "password": "password"
+}
+```
 
-Example Json
-Requires - TeacherID
-
-Example HTTP Request: GET localhost:3007/user/3/classes Body: { }
-
-Expected Response: [ { "class_name": "Algebra I" }, { "class_name": "Biology Basics" }, { "class_name": "Creative Writing" }, { "class_name": "European History" }, { "class_name": "Geometry" }, { "class_name": "Physical Science" } ]
-
-userRouter.post('/signup', userController.createUser);
-
-Example Json
-Requires - N/A
-
-Example HTTP Request: POST localhost:3007/user/signup Body: { "username": "hello", "password": "password" }
-
-Expected Response: { "user_id": 18, "username": "hello", "password_hash": "$2b$10$AMf4.C.r7i/42A.TrXWWB.5Ro1vBQD5hwsJtTltftWEdsgI.gnt5C", "is_teacher": false, "student_id": 13, "role": "student" }
-
-userRouter.post('/login', userController.CheckUserExists)
-
-Example Json
-Requires - N/A
-
-Example HTTP Request: POST localhost:3007/user/login Body: { "username": "hello", "password": "password" }
-
-Expected Response (boolean):
-
+**Response:**
+```json
 true
+```
 
-userRouter.post('/:teacherid/classes', userController.createClass); 
+---
 
-Example Json
-Requires - Subject Name - suggest using a toggle list so user can choose what subject they want to choose from the list of subjects exisiting in the DB
+### Create Class
+**`POST /user/:teacherid/classes`**
 
-Example HTTP Request: POST localhost:3007/3/classes Body: { "className": "hello", "subjectChoice": "Art" }
+Creates a new class for a teacher.
 
-Expected Response: { "class_id": 17, "class_name": "hello", "subject_id": 5 }
+**Parameters:**
+- `teacherid` (path) - Teacher ID
 
-userRouter.post('/:teacherid/classes', userController.createClass);
+**Example Request:**
+```http
+POST /user/3/classes
+Content-Type: application/json
 
-Example Json
-Requires - Subject Name - suggest using a toggle list so user can choose what subject they want to choose from the list of subjects exisiting in the DB
+{
+  "className": "hello",
+  "subjectChoice": "Art"
+}
+```
 
-Example HTTP Request: POST localhost:3007/3/classes Body: { "className": "hello", "subjectChoice": "Art" }
+**Response:**
+```json
+{
+  "class_id": 17,
+  "class_name": "hello",
+  "subject_id": 5
+}
+```
 
-Expected Response: { "class_id": 17, "class_name": "hello", "subject_id": 5 }
+---
 
-userRouter.delete('/:username', userController.deleteUser);
+### Delete User
+**`DELETE /user/:username`**
 
-Example Json
-Requires - username
+Deletes a user account.
 
-Example HTTP Request: DELETE localhost:3007/user/hello Body: { }
+**Parameters:**
+- `username` (path) - Username to delete
 
-Expected Response: { "message": "User deleted successfully", "deletedUsername": "hello", "deletedAt": "2025-07-30T15:33:36.986Z" }
+**Example Request:**
+```http
+DELETE /user/hello
+```
 
-userRouter.delete('/:teacherid/classes/:class', userController.deleteClass);
+**Response:**
+```json
+{
+  "message": "User deleted successfully",
+  "deletedUsername": "hello",
+  "deletedAt": "2025-07-30T15:33:36.986Z"
+}
+```
 
-Example Json
-Requires - teacherID & ClassID
+---
 
-Example HTTP Request: DELETE localhost:3007/user/3/classes/5 Body: { }
+### Delete Class
+**`DELETE /user/:teacherid/classes/:class`**
 
-Expected Response: { "success": true, "message": "Class deleted successfully" }
+Deletes a class.
 
-userRouter.patch('/:teacherid/classes/:class', userController.updateClassDetails); 
+**Parameters:**
+- `teacherid` (path) - Teacher ID
+- `class` (path) - Class ID
 
-Example Json
-Requires - teacherID & ClassID
+**Example Request:**
+```http
+DELETE /user/3/classes/5
+```
 
-Example HTTP Request: PATCH localhost:3007/user/3/classes/5 Body: { "className": "changed" }
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Class deleted successfully"
+}
+```
 
-Expected Response: { "success": true, "message": "Class deleted successfully" }
+---
+
+### Update Class Details
+**`PATCH /user/:teacherid/classes/:class`**
+
+Updates class information.
+
+**Parameters:**
+- `teacherid` (path) - Teacher ID
+- `class` (path) - Class ID
+
+**Example Request:**
+```http
+PATCH /user/3/classes/5
+Content-Type: application/json
+
+{
+  "className": "changed"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Class updated successfully"
+}
+```
+
+---
+
+## 🎮 Game Management
+
+### Start Game
+**`POST /game/:gameID`**
+
+Initializes a new game session and returns game details with questions.
+
+**Parameters:**
+- `gameID` (path) - Game ID
+
+**Example Request:**
+```http
+POST /game/2
+Content-Type: application/json
+
+{
+  "studentID": 1
+}
+```
+
+**Response:**
+```json
+{
+  "message": "Game started successfully",
+  "data": {
+    "gameId": 2,
+    "gameName": "History Explorer",
+    "gameType": "Quiz",
+    "subjectId": 2,
+    "subjectName": "Science",
+    "studentId": 1,
+    "startTime": "2025-07-31T09:27:08.983Z",
+    "questions": [
+      {
+        "id": 3,
+        "question": "What is the chemical symbol for water?",
+        "options": [
+          "H2O",
+          "CO2",
+          "NaCl",
+          "O2"
+        ],
+        "difficulty": "Easy",
+        "topic": "Chemistry"
+      }
+    ],
+    "totalQuestions": 1
+  }
+}
+```
+
+---
+
+### End Game
+**`POST /game/:gameID/ended`**
+
+Finalizes a game session and updates student statistics.
+
+**Parameters:**
+- `gameID` (path) - Game ID
+
+**Example Request:**
+```http
+POST /game/1/ended
+Content-Type: application/json
+
+{
+  "studentId": 5,
+  "finalScore": 85,
+  "questionsAnswered": 10,
+  "correctAnswers": 8
+}
+```
+
+**Response:**
+```json
+{
+  "gameId": 1,
+  "studentId": 5,
+  "finalScore": 85,
+  "questionsAnswered": 10,
+  "correctAnswers": 8,
+  "accuracy": 80,
+  "stats": {
+    "timesPlayed": 3,
+    "averageScore": 85,
+    "bestScore": 85,
+    "lastScore": 85
+  }
+}
+```
+
+---
+
+### Get Random Questions (Any Type/Subject)
+**`GET /game/qs`**
+
+Returns 10 completely random questions from any subject and question type.
+
+**Example Request:**
+```http
+GET /game/qs
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 2,
+    "question": "What is 15 + 27?",
+    "answer": "42",
+    "options": [
+      "42",
+      "41",
+      "43",
+      "44"
+    ],
+    "difficulty": "Easy",
+    "topic": "Arithmetic"
+  },
+  {
+    "id": 1,
+    "question": "What is the capital of France?",
+    "answer": "Paris",
+    "options": [
+      "Paris",
+      "London",
+      "Berlin",
+      "Madrid"
+    ],
+    "difficulty": "Easy",
+    "topic": "European Capitals"
+  },
+  {
+    "id": 3,
+    "question": "What is the chemical symbol for water?",
+    "answer": "H2O",
+    "options": [
+      "H2O",
+      "CO2",
+      "NaCl",
+      "O2"
+    ],
+    "difficulty": "Easy",
+    "topic": "Chemistry"
+  }
+]
+```
+
+---
+
+### Get Random Questions (Specific Type/Subject)
+**`GET /game/qs/:type/:subject`**
+
+Returns 10 random questions filtered by question type and subject.
+
+**Parameters:**
+- `type` (path) - Question type (e.g., "multiplechoice")
+- `subject` (path) - Subject name (e.g., "Mathematics")
+
+**Example Request:**
+```http
+GET /game/qs/multiplechoice/Mathematics
+```
+
+**Response:**
+```json
+[
+  {
+    "id": 1,
+    "question": "What is the capital of France?",
+    "answer": "Paris",
+    "options": [
+      "Paris",
+      "London",
+      "Berlin",
+      "Madrid"
+    ],
+    "difficulty": "Easy",
+    "topic": "European Capitals"
+  },
+  {
+    "id": 2,
+    "question": "What is 15 + 27?",
+    "answer": "42",
+    "options": [
+      "42",
+      "41",
+      "43",
+      "44"
+    ],
+    "difficulty": "Easy",
+    "topic": "Arithmetic"
+  }
+]
+```
+
