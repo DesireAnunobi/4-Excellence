@@ -72,6 +72,12 @@ button {
   border-color: rgba(11, 11, 11, 0.556);
 }
 
+span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .nav-btn {
   width: 80px;
 }

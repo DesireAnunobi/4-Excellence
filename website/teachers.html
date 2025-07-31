@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Teacher Dashboard</title>
   <link rel="stylesheet" href="./css/default.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" />
 </head>
 
@@ -19,8 +20,8 @@
       <h1>★ 4 Excellence</h1>
     </div>
     <div class="col">
-      <button id="homebtn" type="button" class="btn nav-btn btn-outline-dark me-2">Home</button>
-      <button id="logoutbtn" type="button" class="btn nav-btn btn-outline-dark me-2">Logout</button>
+      <button id="homebtn" type="button" class="btn nav-btn btn-outline-dark me-2"><span class="material-symbols-outlined" style="display: flex;">Home</span></button>
+      <button id="logoutbtn" type="button" class="btn nav-btn btn-outline-dark me-2"><span class="material-symbols-outlined" style="display: flex;">logout</span></button>
     </div>
   </div>
 </div>
@@ -35,10 +36,7 @@
             <div class="card-body">
               <h5 class="card-title text-center">📘 My Classes</h5>
               <ul class="list-group mb-3" id="class-list">
-                <li class="list-group-item">Class 7A</li>
-                <li class="list-group-item">Class 7B</li>
-                <li class="list-group-item">Class 8A</li>
-                <li class="list-group-item">Class 8B</li>
+
               </ul>
               <form id="add-class-form" class="d-flex">
                 <input type="text" id="new-class" class="form-control me-2" placeholder="New class name" required />
@@ -51,8 +49,10 @@
         <div class="col">
           <div class="card h-100">
             <div class="card-body">
-              <h5 class="card-title text-center" id="Game_ID">📊 Homework Completion</h5>
-              <canvas id="homeworkChart" width="100" height="100"></canvas>
+              <h5 class="card-title text-center" id="Game_ID">📊 Students</h5>
+              <ul class="list-group">
+                <li class="list-group-item" style="list-style: none; text-align: center;"><i>Coming Soon!</i></li>
+              </ul>
             </div>
           </div>
         </div>
@@ -60,15 +60,10 @@
        <div class="col">
           <div class="card h-100">
             <div class="card-body">
-              <h5 class="card-title text-center" id="Best_Score">🏅 Top Student Scores</h5>
-              <ol class="list-group list-group-numbered">
-                <li class="list-group-item">Amira – 98%</li>
-                <li class="list-group-item">Liam – 96%</li>
-                <li class="list-group-item">Chloe – 95%</li>
-                <li class="list-group-item">Noah – 94%</li>
-                <li class="list-group-item">Emma – 92%</li>
-                <li class="list-group-item">Lucas – 91%</li>
-              </ol>
+              <h5 class="card-title text-center" id="Best_Score">🏅 Student Scores</h5>
+              <ul class="list-group">
+                <li class="list-group-item" style="list-style: none; text-align: center;"><i>Coming Soon!</i></li>
+              </ul>
             </div>
           </div>
         </div>

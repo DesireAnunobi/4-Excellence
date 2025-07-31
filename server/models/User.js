@@ -126,10 +126,9 @@ class User {
         }
     }
 
-    static async CheckUserExists(data) {
+    static async CheckUserExists(username, password, is_teacher) {
         // "isMatch" variable identifies if login was successful based on boolean output: (TRUE = successful) & (False = unsuccessful) 
         try {
-            const { username, password } = data;
             // Find user by username
             const result = await db.query("SELECT * FROM Users WHERE username = $1", [username]);
             if (result.rows.length === 0) {
@@ -137,6 +136,12 @@ class User {
                 return false;
             }
             const user = result.rows[0];
+
+            // Authorisation Check
+            if (user.is_teacher != is_teacher) {
+                throw new Error('Failed to pass authorisation check');
+            }
+
             // Compare password
             const isMatch = await bcrypt.compare(password, user.password_hash);
             return {success: isMatch, username: user.username, user_id: user.user_id}; // true if match, false otherwise
@@ -276,7 +281,7 @@ class Student extends User {
 
         try {
             const result = await db.query(
-                "SELECT * FROM Student_Stats WHERE student_id = $1",
+                "SELECT * FROM Student_Stats WHERE student_id = (SELECT student_id FROM students WHERE user_id = $1)",
                 [student_id]
             );
 
@@ -305,21 +310,18 @@ class Teacher extends User {
     }
 
 
-    static async getClassByTeacher(teacherID) {
+    static async getClassByTeacher(userID) {
         try {
-            const isTeacher = await super.isTeacher(teacherID);
+            const isTeacher = await super.isTeacher(userID);
 
             if (!isTeacher) {
-                console.log("Elevation of privileges attempt!");
-                return null;
+                throw new Error("Elevation of privileges attempt!");
             }
 
             const result = await db.query(
-                "SELECT class_name FROM classes WHERE teacher_id = $1",
-                [teacherID]
-                
+                "SELECT class_name FROM classes WHERE teacher_id = (SELECT teacher_id FROM teachers WHERE user_id = $1)",
+                [userID]
             );
-            console.log(result.rows)
 
             return result.rows.length > 0 ? result.rows : "No Results";
         } catch (error) {
@@ -411,12 +413,12 @@ class Teacher extends User {
 
 
     // use a toggle list / or list subject options e.g. maths,english... and when user selects it the db queries for the associated subject id 
-    static async createClass(teacherId, className, subjectChoice) {
+    static async createClass(userID, className, subjectChoice) {
         try {
             // Verify teacher exists
             const teacher = await db.query(
                 `SELECT teacher_id FROM teachers WHERE user_id = $1`, 
-                [teacherId]
+                [userID]
             );
             
             if (!teacher.rows.length) {
@@ -427,7 +429,7 @@ class Teacher extends User {
                 `SELECT 1 FROM classes 
                  WHERE class_name = $1 
                  AND teacher_id = $2`,
-                [className.trim(), teacher.rows[0].teacher_id]
+                [className, teacher.rows[0].teacher_id]
             );
             
             if (classExists.rows.length) {
@@ -436,7 +438,7 @@ class Teacher extends User {
     
             // Takes the subjectID and  
             const subjectResult = await db.query(
-                `SELECT subject_id FROM subjects WHERE subject ILIKE $1 || '%' LIMIT 1`, [subjectChoice.trim()]
+                `SELECT subject_id FROM subjects WHERE subject LIKE $1 || '%' LIMIT 1`, [subjectChoice.trim()]
                 // not case sensitve due to ILIKE
             );
             if (!subjectResult.rows.length) {
@@ -444,7 +446,7 @@ class Teacher extends User {
             }
             
             const subjectId = subjectResult.rows[0].subject_id; // Extract the ID
-    
+
             // Creates the class using the subjectId from the inputted subject name
             const { rows: [newClass] } = await db.query(
                 `INSERT INTO classes (class_name, teacher_id, subject_id) VALUES ($1, $2, $3) RETURNING class_id, class_name, subject_id`, [className, teacher.rows[0].teacher_id, subjectId] // Use the extracted number

@@ -100,11 +100,22 @@ class Game {
         }
     }
 
-    static async endGame(gameId, studentId, finalScore, questionsAnswered, correctAnswers) {
+    static async endGame(gameId, userID, finalScore, questionsAnswered, correctAnswers) {
         try {
-            await Game.validateStudentExists(studentId);
+            console.log('Ending game:', { gameId, userID, finalScore, questionsAnswered, correctAnswers });
+    
+            // check if student and game exist
+            const studentCheck = await db.query(
+                `SELECT student_id FROM Students WHERE user_id = $1`,
+                [userID]
+            );
 
-            // Only validate game exists
+            const studentId = studentCheck.rows[0].student_id;
+            
+            if (studentCheck.rows.length === 0) {
+                throw new Error(`Student with ID ${studentId} not found`);
+            }
+    
             const gameCheck = await db.query(
                 `SELECT game_id FROM Games WHERE game_id = $1`,
                 [gameId]
@@ -113,7 +124,7 @@ class Game {
             if (gameCheck.rows.length === 0) {
                 throw new Error(`Game with ID ${gameId} not found`);
             }
-
+               
             const existingStats = await db.query(
                 `SELECT * FROM Student_Stats WHERE student_id = $1 AND game_id = $2`,
                 [studentId, gameId]
@@ -146,9 +157,9 @@ class Game {
                     [studentId, gameId, finalScore]
                 );
             }
-
-
+            
             const stats = updatedStats.rows[0];
+            console.log(stats);
             return {
                 gameId: parseInt(gameId),
                 studentId: parseInt(studentId),

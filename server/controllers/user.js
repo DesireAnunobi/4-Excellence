@@ -50,8 +50,8 @@ async function createUser(req, res) {
 async function CheckUserExists(req, res) {
     try {
 
-        const { username, password } = req.body;
-        const user = await User.CheckUserExists({ username, password });
+        const { username, password, is_teacher } = req.body;
+        const user = await User.CheckUserExists(username, password, is_teacher);
 
         if (user.success) {
             const payload = {username: user.username};
@@ -145,7 +145,7 @@ async function getStudentsInClass(req, res) {
   
   async function getClassByTeacher(req, res) {
     try {
-      const teacherId = req.params.teacherid;
+      const teacherId = req.params.id;
   
       if (!teacherId) {
         return res.status(400).json({ message: 'Teacher ID is required' });
@@ -201,9 +201,7 @@ async function getStudentsInClass(req, res) {
 async function createClass(req, res) {
     try {
         const teacherId = req.params.teacherid;
-        const { className } = req.body;
-
-        const { subject } = req.body;
+        const { className, subject } = req.body;
         
         const newClass = await Teacher.createClass(teacherId, className, subject);
       
