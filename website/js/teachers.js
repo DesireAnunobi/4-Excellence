@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/'
+const API_URL = 'http://localhost:3007/'
 
 document.getElementById('homebtn').addEventListener('click', async () => {
   window.location.assign("teachers.html");
@@ -11,6 +11,7 @@ document.getElementById('logoutbtn').addEventListener('click', () => {
   window.location.assign('login.html');
 });
 
+
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("add-class-form");
   const classList = document.getElementById("class-list");
@@ -18,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const API_URL = 'http://localhost:3000';
+
 
     let url = API_URL + `/user/${localStorage.getItem("userID")}/classes`;
 
