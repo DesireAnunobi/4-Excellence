@@ -34,7 +34,7 @@ describe('Authenticator middleware', () => {
         authenticator(req, res, () => {
             expect(res.status).not.toHaveBeenCalled();
             expect(res.json).not.toHaveBeenCalled();
-            done();
+            //done();
         });
     });
 
