@@ -13,15 +13,6 @@ async function getUserStats(req, res) {
     }
 }
 
-async function getUserInfo(req,res){
-    try {
-        const userInfo = await User.getUserInfo(req.params.id)
-        res.status(200).json(userInfo);
-    } catch (error) {
-        res.status(400).json({ error: error.message });
-    }
-}
-
 async function createUser(req, res) {
     try {
         const { username, password, is_teacher, school_name='None' } = req.body;
@@ -77,73 +68,73 @@ async function CheckUserExists(req, res) {
     }
 }
 
-async function deleteUser(req, res) {
-    try {
-        const username  = req.params.username;
+// async function deleteUser(req, res) {
+//     try {
+//         const username  = req.params.username;
         
-        const deletedUser = await User.deleteUser(username);
+//         const deletedUser = await User.deleteUser(username);
         
-        if (!deletedUser) {
-            return res.status(404).json({ error: 'User not found' });
-        }
+//         if (!deletedUser) {
+//             return res.status(404).json({ error: 'User not found' });
+//         }
         
-        res.status(200).json({ 
-            message: 'User deleted successfully',
-            deletedUsername: deletedUser.username,
-            deletedAt: new Date().toISOString()
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
+//         res.status(200).json({ 
+//             message: 'User deleted successfully',
+//             deletedUsername: deletedUser.username,
+//             deletedAt: new Date().toISOString()
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// }
 
 
-async function deleteClass(req, res) {
-    try {
-        const teacherId = req.params.teacherid;
-        const classId = req.params.class;
+// async function deleteClass(req, res) {
+//     try {
+//         const teacherId = req.params.teacherid;
+//         const classId = req.params.class;
 
     
-        if (!teacherId || !classId) {
-            return res.status(400).json({
-                success: false,
-                message: "Teacher ID and Class ID are required"
-            });
-        }
+//         if (!teacherId || !classId) {
+//             return res.status(400).json({
+//                 success: false,
+//                 message: "Teacher ID and Class ID are required"
+//             });
+//         }
 
-        const result = await Teacher.deleteClass(teacherId, classId);
-        console.log(result.deletedClass)
+//         const result = await Teacher.deleteClass(teacherId, classId);
+//         console.log(result.deletedClass)
         
-        res.status(200).json({
-            success: true,
-            data: result.deletedClass,
-            message: "Class deleted successfully"
+//         res.status(200).json({
+//             success: true,
+//             data: result.deletedClass,
+//             message: "Class deleted successfully"
             
-        });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
+//         });
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// }
 
-async function getStudentsInClass(req, res) {
-    try {
-        const classId = req.params.id;
+// async function getStudentsInClass(req, res) {
+//     try {
+//         const classId = req.params.id;
       
-      const result = await User.getStudentsInClass(classId || null);
+//       const result = await User.getStudentsInClass(classId || null);
   
-      if (Object.keys(result).length === 0) {
-        return res.status(404).json({ message: 'No students found' });
-      }
+//       if (Object.keys(result).length === 0) {
+//         return res.status(404).json({ message: 'No students found' });
+//       }
   
-      res.status(200).json(result);
+//       res.status(200).json(result);
   
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
+//     } catch (error) {
+//       res.status(500).json({ error: error.message });
+//     }
+// }
 
   
-  async function getClassByTeacher(req, res) {
+async function getClassByTeacher(req, res) {
     try {
       const teacherId = req.params.id;
   
@@ -161,40 +152,7 @@ async function getStudentsInClass(req, res) {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  }
-
-  async function getClasses(req, res) {
-    try {
-    const teacherId = req.params.teacherid; // From URL
-      const classID = req.params.id;
-  
-      if (!classID) {
-        return res.status(400).json({ message: 'Class ID is required' });
-      }
-  
-      const classes = await Teacher.getClasses(classID, teacherId);
-  
-      if (!classes || classes === "No Results") {
-        return res.status(404).json({ message: 'No classes found ' });
-      }
-  
-      res.status(200).json({ classes });
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-
-  async function getAllClasses(req,res){
-    try {
-        const teacherId = req.params.teacherid; // From URL
-        const classes = await Teacher.getAllClasses(teacherId);
-        res.status(200).json(classes)
-
-    } catch (error) {
-        res.status(500).json({ error: error.message })
-    }
 }
-
 
 // TEACHER FUNCTIONS
 
@@ -212,22 +170,22 @@ async function createClass(req, res) {
     }
 }
 
-async function updateClassDetails(req, res) {
-    try {
-        const teacherId = req.params.teacherid;
-        const classId = req.params.classId;
-        // console.log('teacher ID:', teacherId)
-        // console.log('class ID:', classId)
-        const { className } = req.body;
-        console.log(className)
+// async function updateClassDetails(req, res) {
+//     try {
+//         const teacherId = req.params.teacherid;
+//         const classId = req.params.classId;
+//         // console.log('teacher ID:', teacherId)
+//         // console.log('class ID:', classId)
+//         const { className } = req.body;
+//         console.log(className)
 
-        const updatedClass = await Teacher.updateClass(teacherId, classId, className);
-        res.status(200).json(updatedClass);
+//         const updatedClass = await Teacher.updateClass(teacherId, classId, className);
+//         res.status(200).json(updatedClass);
 
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}
+//     } catch (error) {
+//         res.status(500).json({ error: error.message });
+//     }
+// }
 
 
 
@@ -236,14 +194,10 @@ module.exports = {
     getUserStats, 
     createUser, 
     CheckUserExists, 
-    deleteUser, 
-    getUserInfo, 
-    getStudentsInClass,
+    // deleteUser, 
+    // getStudentsInClass,
     getClassByTeacher,
-    getClasses,
-    getAllClasses,
-    deleteClass,
-    createClass,
-    updateClassDetails
-
+    // deleteClass,
+    createClass
+//    updateClassDetails
 };

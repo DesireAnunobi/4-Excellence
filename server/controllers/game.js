@@ -11,15 +11,15 @@ async function getRandomQuestions(req, res) {
     }
 }
 
-async function getVeryRandomQuestions(req,res) {
-    try {
-        const questions = await Game.getVeryRandomQuestions();
-        res.json(questions)
-    } catch (error) {
-        res.status(500).json({error: error.message});
-    }
+// async function getVeryRandomQuestions(req,res) {
+//     try {
+//         const questions = await Game.getVeryRandomQuestions();
+//         res.json(questions)
+//     } catch (error) {
+//         res.status(500).json({error: error.message});
+//     }
     
-}
+// }
 
 async function endGame(req, res) {
     try {
@@ -47,8 +47,6 @@ async function startGame(req, res) {
 
 module.exports = {
     getRandomQuestions,
-    getVeryRandomQuestions,
-    endGame,
-    startGame
-
+    // getVeryRandomQuestions,
+    endGame
 }

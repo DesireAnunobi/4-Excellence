@@ -30,26 +30,26 @@ class User {
         return result.rows[0].is_teacher === true;
     }
 
-    static async getUserInfo(userID) {
-        if (!userID) {
-            throw new Error('Valid UserID is required');
-        }
+    // static async getUserInfo(userID) {
+    //     if (!userID) {
+    //         throw new Error('Valid UserID is required');
+    //     }
 
-        try {
-            const result = await db.query(
-                "SELECT username , is_teacher FROM Users WHERE user_id = $1",
-                [userID]
-            );
+    //     try {
+    //         const result = await db.query(
+    //             "SELECT username , is_teacher FROM Users WHERE user_id = $1",
+    //             [userID]
+    //         );
 
-            if (result.rows.length > 0) {
-                return result.rows;
-            } else {
-                return "No Results"; // Return empty array if no stats found
-            }
-        } catch (error) {
-            throw new Error('Failed to find user stats: ' + error.message);
-        }
-    }
+    //         if (result.rows.length > 0) {
+    //             return result.rows;
+    //         } else {
+    //             return "No Results"; // Return empty array if no stats found
+    //         }
+    //     } catch (error) {
+    //         throw new Error('Failed to find user stats: ' + error.message);
+    //     }
+    // }
 
 
     static async createUser(data) {
@@ -152,113 +152,113 @@ class User {
     }
 
 
-    static async deleteUser(username) {
-        if (!username || typeof username !== 'string') {
-            console.log(username)
-            throw new Error('Valid username is required');
-        }
+    // static async deleteUser(username) {
+    //     if (!username || typeof username !== 'string') {
+    //         console.log(username)
+    //         throw new Error('Valid username is required');
+    //     }
 
-        try {
-            const cleanUsername = username.trim().replace(/\s+/g, '').toLowerCase();
+    //     try {
+    //         const cleanUsername = username.trim().replace(/\s+/g, '').toLowerCase();
         
-            const result = await db.query(
-                `DELETE FROM Users 
-                 WHERE LOWER(REPLACE(username, '_', '')) = $1 
-                 RETURNING username, user_id, is_teacher`,
-                [cleanUsername]
-            );
+    //         const result = await db.query(
+    //             `DELETE FROM Users 
+    //              WHERE LOWER(REPLACE(username, '_', '')) = $1 
+    //              RETURNING username, user_id, is_teacher`,
+    //             [cleanUsername]
+    //         );
 
-            // Return null if no user found 
-            if (result.rows.length === 0) {
-                return null;
-            }
+    //         // Return null if no user found 
+    //         if (result.rows.length === 0) {
+    //             return null;
+    //         }
 
-            // Return the full deleted user data
-            return result.rows[0];
+    //         // Return the full deleted user data
+    //         return result.rows[0];
 
-        } catch (error) {
-            throw new Error(`User deletion failed: ${error.message}`);
-        }
-    }
+    //     } catch (error) {
+    //         throw new Error(`User deletion failed: ${error.message}`);
+    //     }
+    // }
 
-    static async getStudentsInClass(classID = null) {
-        try {
-            let query;
-            let params = [];
+    // static async getStudentsInClass(classID = null) {
+    //     try {
+    //         let query;
+    //         let params = [];
 
-            if (classID) {
-                // Get students for a specific class
-                query = `
-                    SELECT 
-                        c.class_name,
-                        u.username AS student_name
-                    FROM Classes c
-                    JOIN Students_To_Classes stc ON c.class_id = stc.class_id
-                    JOIN Students s ON stc.student_id = s.student_id
-                    JOIN Users u ON s.user_id = u.user_id
-                    WHERE c.class_id = $1
-                    ORDER BY u.username
-                `;
-                params = [classID];
+    //         if (classID) {
+    //             // Get students for a specific class
+    //             query = `
+    //                 SELECT 
+    //                     c.class_name,
+    //                     u.username AS student_name
+    //                 FROM Classes c
+    //                 JOIN Students_To_Classes stc ON c.class_id = stc.class_id
+    //                 JOIN Students s ON stc.student_id = s.student_id
+    //                 JOIN Users u ON s.user_id = u.user_id
+    //                 WHERE c.class_id = $1
+    //                 ORDER BY u.username
+    //             `;
+    //             params = [classID];
 
-                const result = await db.query(query, params);
+    //             const result = await db.query(query, params);
 
-                if (result.rows.length === 0) {
-                    return {};
-                }
+    //             if (result.rows.length === 0) {
+    //                 return {};
+    //             }
 
-                const className = result.rows[0].class_name;
-                const studentsNames = result.rows.map(row => row.student_name);
+    //             const className = result.rows[0].class_name;
+    //             const studentsNames = result.rows.map(row => row.student_name);
 
-                return {
-                    class_name: className,
-                    students_names: studentsNames
-                };
-            } else {
-                // Get students for all classes
-                query = `
-                    SELECT 
-                        c.class_name,
-                        s.student_id,
-                        u.username AS student_name,
-                        u.user_id
-                    FROM Classes c
-                    JOIN Students_To_Classes stc ON c.class_id = stc.class_id
-                    JOIN Students s ON stc.student_id = s.student_id
-                    JOIN Users u ON s.user_id = u.user_id
-                    ORDER BY c.class_name, u.username
-                `;
+    //             return {
+    //                 class_name: className,
+    //                 students_names: studentsNames
+    //             };
+    //         } else {
+    //             // Get students for all classes
+    //             query = `
+    //                 SELECT 
+    //                     c.class_name,
+    //                     s.student_id,
+    //                     u.username AS student_name,
+    //                     u.user_id
+    //                 FROM Classes c
+    //                 JOIN Students_To_Classes stc ON c.class_id = stc.class_id
+    //                 JOIN Students s ON stc.student_id = s.student_id
+    //                 JOIN Users u ON s.user_id = u.user_id
+    //                 ORDER BY c.class_name, u.username
+    //             `;
 
-                const result = await db.query(query);
+    //             const result = await db.query(query);
 
-                if (result.rows.length === 0) {
-                    return {};
-                }
+    //             if (result.rows.length === 0) {
+    //                 return {};
+    //             }
 
-                // Group students by class name
-                const classesWithStudents = {};
+    //             // Group students by class name
+    //             const classesWithStudents = {};
 
-                result.rows.forEach(row => {
-                    const className = row.class_name;
+    //             result.rows.forEach(row => {
+    //                 const className = row.class_name;
 
-                    if (!classesWithStudents[className]) {
-                        classesWithStudents[className] = [];
-                    }
+    //                 if (!classesWithStudents[className]) {
+    //                     classesWithStudents[className] = [];
+    //                 }
 
-                    classesWithStudents[className].push({
-                        student_id: row.student_id,
-                        student_name: row.student_name,
-                        user_id: row.user_id
-                    });
-                });
+    //                 classesWithStudents[className].push({
+    //                     student_id: row.student_id,
+    //                     student_name: row.student_name,
+    //                     user_id: row.user_id
+    //                 });
+    //             });
 
-                return classesWithStudents;
-            }
+    //             return classesWithStudents;
+    //         }
 
-        } catch (error) {
-            throw new Error('Failed to get students in classes: ' + error.message);
-        }
-    }
+    //     } catch (error) {
+    //         throw new Error('Failed to get students in classes: ' + error.message);
+    //     }
+    // }
 
 
 
@@ -330,86 +330,44 @@ class Teacher extends User {
 
     }
 
-    static async getClasses(classID, teacherID) {
-        try {
-            const isTeacher = await super.isTeacher(teacherID);
+    // static async deleteClass(teacherID, classID) {
+    //     try {
+    //         const isTeacher = await super.isTeacher(teacherID);
 
-            if (!isTeacher) {
-                console.log("Elevation of privileges attempt!");
-                return null;
-            }
-
-            const result = await db.query(
-                "SELECT class_name FROM classes WHERE class_id = $1", [classID]
-            );
-            console.log(result.rows)
-
-            return result.rows.length > 0 ? result.rows : "No Results"; //if statement
-        } catch (error) {
-            throw new Error('Failed to get classes: ' + error.message);
-        }
-
-    }
-
-    static async getAllClasses(teacherID) {
-        try {
-            const isTeacher = await super.isTeacher(teacherID);
-
-            if (!isTeacher) {
-                console.log("Elevation of privileges attempt!");
-                return null;
-            }
-
-            const result = await db.query(
-                "SELECT class_name FROM classes "
-            );
-            console.log(result.rows)
-
-            return result.rows.length > 0 ? result.rows : "No Results";
-        } catch (error) {
-            throw new Error('Failed to get classes: ' + error.message);
-        }
-
-    }
-
-    static async deleteClass(teacherID, classID) {
-        try {
-            const isTeacher = await super.isTeacher(teacherID);
-
-            if (!isTeacher) {
-                console.log("Elevation of privileges attempt!");
-                return null;
-            }
+    //         if (!isTeacher) {
+    //             console.log("Elevation of privileges attempt!");
+    //             return null;
+    //         }
 
 
-            // verify the teacher owns the class
-            const ownershipCheck = await db.query(
-                `SELECT 1 FROM Classes WHERE class_id = $1 AND teacher_id = (SELECT teacher_id FROM teachers WHERE user_id = $2)`,
-                [classID, teacherID]
-            );
+    //         // verify the teacher owns the class
+    //         const ownershipCheck = await db.query(
+    //             `SELECT 1 FROM Classes WHERE class_id = $1 AND teacher_id = (SELECT teacher_id FROM teachers WHERE user_id = $2)`,
+    //             [classID, teacherID]
+    //         );
     
-            if (ownershipCheck.rows.length === 0) {
-                return { success: false, message: "Class not found or unauthorised" };
-            }
+    //         if (ownershipCheck.rows.length === 0) {
+    //             return { success: false, message: "Class not found or unauthorised" };
+    //         }
     
-            //Delete the class
-            const result = await db.query(
-                `DELETE FROM Classes WHERE class_id = $1 RETURNING class_id, class_name`, [classID]
-            );
+    //         //Delete the class
+    //         const result = await db.query(
+    //             `DELETE FROM Classes WHERE class_id = $1 RETURNING class_id, class_name`, [classID]
+    //         );
     
-            return { 
-                success: true,
-                deletedClass: result.rows[0] 
-            };
+    //         return { 
+    //             success: true,
+    //             deletedClass: result.rows[0] 
+    //         };
     
-        } catch (error) {
-            console.error("error:", error);
-            return { 
-                success: false, 
-                message: "Failed to delete class" 
-            };
-        }
-    }
+    //     } catch (error) {
+    //         console.error("error:", error);
+    //         return { 
+    //             success: false, 
+    //             message: "Failed to delete class" 
+    //         };
+    //     }
+    // }
 
 
     // use a toggle list / or list subject options e.g. maths,english... and when user selects it the db queries for the associated subject id 
@@ -459,20 +417,20 @@ class Teacher extends User {
         }
     }
 
-    static async updateClass(teacherId, classId, className) {
-        console.log('class name change: ', className)
-        console.log('teacher ID:', teacherId)
-        console.log('class ID:', classId)
-        const { rows: [classData] } = await db.query(
-            `UPDATE Classes SET class_name = $1 WHERE class_id = $2 AND teacher_id = (SELECT teacher_id FROM Teachers WHERE user_id = $3) RETURNING class_id, class_name`, [className, classId, teacherId]
-        );
-        console.log('class data:', classData)
-        if (!classData) {
-            throw new Error("Class not found or unauthorised");
-        }
+    // static async updateClass(teacherId, classId, className) {
+    //     console.log('class name change: ', className)
+    //     console.log('teacher ID:', teacherId)
+    //     console.log('class ID:', classId)
+    //     const { rows: [classData] } = await db.query(
+    //         `UPDATE Classes SET class_name = $1 WHERE class_id = $2 AND teacher_id = (SELECT teacher_id FROM Teachers WHERE user_id = $3) RETURNING class_id, class_name`, [className, classId, teacherId]
+    //     );
+    //     console.log('class data:', classData)
+    //     if (!classData) {
+    //         throw new Error("Class not found or unauthorised");
+    //     }
     
-        return classData;
-    }
+    //     return classData;
+    // }
     
 
 
