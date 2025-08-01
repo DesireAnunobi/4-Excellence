@@ -24,7 +24,7 @@ describe('teachers.html', () => {
       const lastItem = listItems[listItems.length - 1];
       expect(lastItem.textContent).toBe('History');
     } else {
-      // If elements don't exist, at least verify the DOM loaded
+
       expect(document.body.innerHTML).toContain('html');
     }
   });
@@ -35,7 +35,7 @@ describe('teachers.html', () => {
       const listItems = topStudents.querySelectorAll('li');
       expect(listItems.length).toBeLessThanOrEqual(10);
     } else {
-      // If element doesn't exist, check that DOM loaded successfully
+ 
       expect(document.body).toBeTruthy();
     }
   });
@@ -50,14 +50,13 @@ describe("students.html", () => {
     const geographyLast = document.getElementById("geography-last");
     const historyLast = document.getElementById("history-last");
 
-    // Check if these elements exist in the DOM
+
     if (geographyLast && historyLast) {
       expect(geographyLast).toBeTruthy();
       expect(historyLast).toBeTruthy();
-      // console.log('Geography last score element:', geographyLast);
-      // console.log('History last score element:', historyLast);
+  
     } else {
-      // If elements don't exist, at least verify the DOM loaded
+   
       expect(document.body).toBeTruthy();
       console.log("Elements not found, but DOM loaded successfully");
     }
@@ -127,6 +126,62 @@ describe('game.html', () => {
       const box = document.getElementById(`box${i}`);
       expect(box.getAttribute('onclick')).toBe('selectAnswer(this)');
     }
+  });
+
+  describe('game-result.html', () => {
+    beforeEach(async () => {
+      await renderDOM("./website/game-result.html");
+    });
+    it('displays header with ★4Excellence', () => {
+      const heading = document.querySelector('h1');
+      expect(heading).not.toBeNull();
+      expect(heading.textContent).toBe('★4Excellence');
+    });
+    it('has Home and Logout buttons with proper labels', () => {
+      const homeBtn = document.getElementById('homebtn');
+      const logoutBtn = document.getElementById('logoutbtn');
+      expect(homeBtn).not.toBeNull();
+      expect(logoutBtn).not.toBeNull();
+      expect(homeBtn.textContent.toLowerCase()).toContain('home');
+      expect(logoutBtn.textContent.toLowerCase()).toContain('logout');
+    });
+    it('renders a results table with one row per question and a total row', () => {
+      const rows = document.querySelectorAll('#resultsTable tr');
+      
+      expect(rows.length).toBe(4);
+      const totalRow = rows[3];
+      expect(totalRow.textContent.toLowerCase()).toContain('total score');
+      expect(totalRow.textContent).toContain('2/3');
+    });
+    it('correctly labels question rows and score cells', () => {
+      const rows = document.querySelectorAll('#resultsTable tr');
+      const [row1, row2, row3] = rows;
+      expect(row1.children[0].textContent).toBe('Question 1');
+      expect(row1.children[1].textContent).toBe('1/1');
+      expect(row2.children[0].textContent).toBe('Question 2');
+      expect(row2.children[1].textContent).toBe('0/1');
+      expect(row3.children[0].textContent).toBe('Question 3');
+      expect(row3.children[1].textContent).toBe('1/1');
+    });
+    it('has a dashboard button linking to students.html', () => {
+      const btn = [...document.querySelectorAll('button')].find(b =>
+        b.getAttribute('onclick')?.includes('students.html')
+      );
+      expect(btn).not.toBeNull();
+    });
+    it('has working footer with 2025 copyright', () => {
+      const footer = document.querySelector('footer p');
+      expect(footer).not.toBeNull();
+      expect(footer.textContent).toContain('4 Excellence');
+      expect(footer.textContent).toContain('2025');
+    });
+    it('loads game-result.js script with defer', () => {
+      const script = [...document.querySelectorAll('script')].find(s =>
+        s.src.includes('game-result.js')
+      );
+      expect(script).toBeDefined();
+      expect(script.defer).toBe(true);
+    });
   });
 
 });
