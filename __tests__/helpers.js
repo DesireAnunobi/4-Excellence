@@ -25,6 +25,6 @@ module.exports = {
 
 // write all test file names to ignore when running helper.js
 
-test('dummy test', () => {
-  expect(true).toBe(true);
-});
+// test('dummy test', () => {
+//   expect(true).toBe(true);
+// });
